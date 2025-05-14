@@ -1,1 +1,3 @@
-# Lab 6 - Starter
+# Lab 6
+
+https://gauravn17.github.io/Lab6/

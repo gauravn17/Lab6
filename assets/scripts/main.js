@@ -44,3 +44,62 @@ function addRecipesToDocument(recipes) {
     mainElement.appendChild(recipeCard);
   });
 }
+
+/**
+ * Takes in an array of recipes, converts it to a string, and then
+ * saves that string to 'recipes' in localStorage
+ * @param {Array<Object>} recipes An array of recipes
+ */
+function saveRecipesToStorage(recipes) {
+	// B1.
+	localStorage.setItem('recipes', JSON.stringify(recipes));
+  }
+  
+  /**
+   * Adds the necessary event handlers to <form> and the clear storage
+   * <button>.
+   */
+  function initFormHandler() {
+	// B2. Get a reference to the <form> element
+	const form = document.querySelector('form');
+  
+	// B3. Add event listener for 'submit'
+	form.addEventListener('submit', (e) => {
+	  e.preventDefault(); // prevent page refresh
+  
+	  // B4. Create new FormData object
+	  const formData = new FormData(form);
+  
+	  // B5. Create recipeObject from form data
+	  const recipeObject = {};
+	  for (const [key, value] of formData.entries()) {
+		recipeObject[key] = value;
+	  }
+  
+	  // B6. Create new <recipe-card> element
+	  const newCard = document.createElement('recipe-card');
+  
+	  // B7. Add data to card
+	  newCard.data = recipeObject;
+  
+	  // B8. Append card to <main>
+	  document.querySelector('main').appendChild(newCard);
+  
+	  // B9. Save to localStorage
+	  const currentRecipes = getRecipesFromStorage();
+	  currentRecipes.push(recipeObject);
+	  saveRecipesToStorage(currentRecipes);
+	});
+  
+	// B10. Get reference to "Clear Local Storage" button
+	const clearButton = document.querySelector('button[type="button"]');
+  
+	// B11. Add click event listener
+	clearButton.addEventListener('click', () => {
+	  // B12. Clear localStorage
+	  localStorage.clear();
+  
+	  // B13. Clear <main> content
+	  document.querySelector('main').innerHTML = '';
+	});
+  }

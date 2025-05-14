@@ -1,54 +1,98 @@
 // RecipeCard.js
-
 class RecipeCard extends HTMLElement {
-	// Called once when document.createElement('recipe-card') is called, or
-	// the element is written into the DOM directly as <recipe-card>
 	constructor() {
-		super(); // Inherit everything from HTMLElement
-
-		// EXPOSE - START (All expose numbers start with A)
-		// A1. TODO - Attach the shadow DOM to this Web Component (leave the mode open)
-		// A2. TODO - Create an <article> element - This will hold our markup once our data is set
-		// A3. TODO - Create a style element - This will hold all of the styles for the Web Component
-		// A4. TODO - Insert all of the styles from cardTemplate.html into the <style> element you just made (copy everything INSIDE the <style> tag>)
-		// A5. TODO - Append the <style> and <article> elements to the Shadow DOM
+	  super();
+  
+	  // A1. Attach shadow DOM
+	  this.shadow = this.attachShadow({ mode: 'open' });
+  
+	  // A2. Create <article> element
+	  const article = document.createElement('article');
+  
+	  // A3. Create <style> element
+	  const style = document.createElement('style');
+  
+	  // A4. Add styles from cardTemplate.html (copy/paste ONLY what's inside <style> tag)
+	  style.textContent = `
+		* {
+		  font-family: sans-serif;
+		  margin: 0;
+		  padding: 0;
+		}
+		article {
+		  border: 1px solid rgb(223, 225, 229);
+		  border-radius: 8px;
+		  overflow: hidden;
+		  width: 178px;
+		  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+		  margin: 10px;
+		}
+		article img {
+		  width: 100%;
+		  object-fit: cover;
+		  height: 118px;
+		}
+		p.title {
+		  font-size: 16px;
+		  margin: 10px 0;
+		}
+		p.title a {
+		  text-decoration: none;
+		  color: #333;
+		}
+		p.organization {
+		  color: #555;
+		  font-size: 14px;
+		  margin: 5px 0;
+		}
+		div.rating {
+		  display: flex;
+		  align-items: center;
+		  font-size: 14px;
+		}
+		div.rating img {
+		  width: 80px;
+		  height: auto;
+		  margin-right: 5px;
+		}
+		time {
+		  display: block;
+		  font-size: 12px;
+		  color: #666;
+		  margin: 5px 0;
+		}
+		p.ingredients {
+		  font-size: 12px;
+		  color: #666;
+		  margin: 5px 0;
+		}
+	  `;
+  
+	  // A5. Append <style> and <article> to shadow DOM
+	  this.shadow.appendChild(style);
+	  this.shadow.appendChild(article);
 	}
-
-	/**
-	 * Called when the .data property is set on this element.
-	 *
-	 * For example:
-	 * let recipeCard = document.createElement('recipe-card'); // Calls constructor()
-	 * recipeCard.data = { foo: 'bar' } // Calls set data({ foo: 'bar' })
-	 *
-	 * @param {Object} data - The data to pass into the <recipe-card> must be of the
-	 *                        following format:
-	 *                        {
-	 *                          "imgSrc": "string",
-	 *                          "imgAlt": "string",
-	 *                          "titleLnk": "string",
-	 *                          "titleTxt": "string",
-	 *                          "organization": "string",
-	 *                          "rating": number,
-	 *                          "numRatings": number,
-	 *                          "lengthTime": "string",
-	 *                          "ingredients": "string"
-	 *                        }
-	 */
+  
 	set data(data) {
-		// If nothing was passed in, return
-		if (!data) return;
-
-		// A6. TODO - Select the <article> we added to the Shadow DOM in the constructor
-		// A7. TODO - Set the contents of the <article> with the <article> template given in
-		//           cardTemplate.html and the data passed in (You should only have one <article>,
-		//           do not nest an <article> inside another <article>). You should use template
-		//           literals (template strings) and element.innerHTML for this.
-		// 			 Do NOT include the <article> tags within the innerHTML of the element you create.
-		//           Remember to replace all the placeholders in the template with the data passed in.
-		//           i.e. imgSrc, titleLnk, etc
+	  if (!data) return;
+  
+	  // A6. Select <article> in shadow DOM
+	  const article = this.shadow.querySelector('article');
+  
+	  // A7. Set innerHTML using template literals
+	  article.innerHTML = `
+		<img src="${data.imgSrc}" alt="${data.imgAlt}">
+		<p class="title"><a href="${data.titleLnk}">${data.titleTxt}</a></p>
+		<p class="organization">${data.organization}</p>
+		<div class="rating">
+		  <img src="./assets/images/icons/${data.rating}-star.svg" alt="${data.rating} stars">
+		  <span>(${data.numRatings})</span>
+		</div>
+		<time>${data.lengthTime}</time>
+		<p class="ingredients">${data.ingredients}</p>
+	  `;
 	}
-}
-
-// A8. TODO - Define the Class as a customElement so that you can create
-//           'recipe-card' elements
+  }
+  
+  // A8. Define custom element
+  customElements.define('recipe-card', RecipeCard);
